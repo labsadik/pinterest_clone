@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="bg-white p-6 rounded-xl shadow w-80">
+  <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
+
+  <input id="email" placeholder="Email"
+    class="w-full mb-3 p-2 border rounded"/>
+
+  <input id="password" type="password" placeholder="Password"
+    class="w-full mb-3 p-2 border rounded"/>
+
+  <button onclick="login()"
+    class="w-full bg-red-500 text-white py-2 rounded">
+    Login
+  </button>
+
+  <p class="text-sm mt-3 text-center">
+    No account?
+    <a href="signup.html" class="text-red-500">Signup</a>
+  </p>
+</div>
+
+<script>
+const API = "http://localhost:5000/api"
+
+async function login(){
+  const res = await fetch(API + "/auth/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  })
+
+  const data = await res.json()
+
+  if(data.token){
+    localStorage.setItem("token", data.token)
+    location = "index.html"
+  }else{
+    alert("Login failed")
+  }
+}
+</script>
+
+</body>
+</html>

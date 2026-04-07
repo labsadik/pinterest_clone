@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feed | Pinterest Clone</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+.masonry-grid {
+  column-count: 6;
+  column-gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .masonry-grid { column-count: 4; }
+}
+
+@media (max-width: 768px) {
+  .masonry-grid { column-count: 2; }
+}
+
+.card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #E60023;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+</style>
+</head>
+
+<body class="bg-white min-h-screen">
+
+<div class="flex">
+  <!-- SIDEBAR -->
+  <aside class="w-[88px] h-screen fixed left-0 top-0 bg-white border-r border-gray-200 flex flex-col items-center py-4 z-20">
+    <!-- Logo -->
+    <div class="mb-8 cursor-pointer">
+      <i class="fab fa-pinterest text-red-600 text-3xl"></i>
+    </div>
+
+    <!-- Nav Items -->
+    <nav class="flex flex-col gap-6 items-center flex-1">
+      <a href="#" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="fas fa-home text-xl text-gray-800 group-hover:text-black"></i>
+      </a>
+      
+      <a href="#" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="fas fa-compass text-xl text-gray-800 group-hover:text-black"></i>
+      </a>
+      
+      <button onclick="showUpload()" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="fas fa-plus-circle text-xl text-gray-800 group-hover:text-black"></i>
+      </button>
+      
+      <a href="#" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="far fa-bell text-xl text-gray-800 group-hover:text-black"></i>
+      </a>
+      
+      <a href="#" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="far fa-comment-dots text-xl text-gray-800 group-hover:text-black"></i>
+      </a>
+    </nav>
+
+    <!-- Bottom Actions -->
+    <div class="flex flex-col gap-6 items-center mt-auto">
+      <button onclick="logout()" class="w-14 h-14 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all group">
+        <i class="fas fa-sign-out-alt text-xl text-gray-800 group-hover:text-black"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="ml-[88px] flex-1">
+    <!-- HEADER -->
+    <header class="sticky top-0 bg-white z-10 px-6 py-3 flex items-center justify-between border-b border-gray-200">
+      <div class="flex-1 max-w-3xl mx-auto relative">
+        <input 
+          type="text" 
+          placeholder="Search" 
+          class="w-full bg-gray-100 rounded-full px-5 py-3 pl-12 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white transition-all"
+        />
+        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"></i>
+      </div>
+      
+      <div class="ml-4 flex items-center gap-3">
+        <button class="w-10 h-10 rounded-full bg-gray-200 font-semibold text-sm hover:bg-gray-300 transition-colors">
+          A
+        </button>
+        <i class="fas fa-chevron-down text-xs text-gray-600"></i>
+      </div>
+    </header>
+
+    <!-- FEED GRID -->
+    <div class="p-6">
+      <div id="grid" class="masonry-grid"></div>
+      
+      <!-- LOADING SPINNER -->
+      <div id="loader" class="hidden flex justify-center items-center py-8">
+        <div class="spinner"></div>
+      </div>
+      
+      <!-- SKELETON LOADER -->
+      <div id="skeletonLoader" class="masonry-grid hidden">
+        <div class="card skeleton h-64"></div>
+        <div class="card skeleton h-80"></div>
+        <div class="card skeleton h-72"></div>
+        <div class="card skeleton h-96"></div>
+        <div class="card skeleton h-68"></div>
+        <div class="card skeleton h-84"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div id="uploadBox" class="hidden fixed inset-0 bg-black/60 z-50 flex justify-center items-center backdrop-blur-sm">
+  <div class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md transform transition-all scale-95 opacity-0" id="uploadModal">
+    <h2 class="text-2xl font-bold mb-6 text-gray-900">Create Pin</h2>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold mb-2 text-gray-700">Title</label>
+        <input 
+          id="title" 
+          placeholder="Add a title" 
+          class="border-2 border-gray-200 rounded-xl p-3 w-full focus:outline-none focus:border-blue-500 transition-colors"
+        />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold mb-2 text-gray-700">Image or Video</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer">
+          <input type="file" id="file" class="mb-2 w-full" accept="image/*,video/*"/>
+          <p class="text-sm text-gray-500 mt-2">Click to upload or drag and drop</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-3">
+      <button onclick="hideUpload()" class="flex-1 bg-gray-200 text-gray-800 px-4 py-3 rounded-full font-semibold hover:bg-gray-300 transition-colors">
+        Cancel
+      </button>
+      <button onclick="upload()" class="flex-1 bg-red-600 text-white px-4 py-3 rounded-full font-semibold hover:bg-red-700 transition-colors">
+        Upload
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "http://localhost:5000/api"
+let isLoading = false
+
+// 🔐 CHECK LOGIN
+if(!localStorage.getItem("token")){
+  location = "login.html"
+}
+
+// LOGOUT
+function logout(){
+  localStorage.removeItem("token")
+  location = "login.html"
+}
+
+// SHOW UPLOAD MODAL WITH ANIMATION
+function showUpload(){
+  uploadBox.classList.remove('hidden')
+  setTimeout(() => {
+    uploadModal.classList.remove('scale-95', 'opacity-0')
+    uploadModal.classList.add('scale-100', 'opacity-100')
+  }, 10)
+}
+
+// HIDE UPLOAD MODAL WITH ANIMATION
+function hideUpload(){
+  uploadModal.classList.remove('scale-100', 'opacity-100')
+  uploadModal.classList.add('scale-95', 'opacity-0')
+  setTimeout(() => {
+    uploadBox.classList.add('hidden')
+  }, 200)
+}
+
+// UPLOAD
+async function upload(){
+  const titleInput = document.getElementById('title')
+  const fileInput = document.getElementById('file')
+  
+  if(!fileInput.files[0]){
+    alert('Please select a file')
+    return
+  }
+  
+  showLoader()
+  
+  const form = new FormData()
+  form.append("file", fileInput.files[0])
+  form.append("title", titleInput.value)
+
+  try {
+    await fetch(API + "/post/upload", {
+      method:"POST",
+      headers:{
+        "Authorization": localStorage.getItem("token")
+      },
+      body: form
+    })
+    
+    hideUpload()
+    loadPosts(true)
+  } catch (error) {
+    console.error('Upload failed:', error)
+    alert('Upload failed. Please try again.')
+  } finally {
+    hideLoader()
+  }
+}
+
+// SHOW LOADER
+function showLoader(){
+  isLoading = true
+  document.getElementById('loader').classList.remove('hidden')
+  document.getElementById('loader').classList.add('flex')
+}
+
+// HIDE LOADER
+function hideLoader(){
+  isLoading = false
+  document.getElementById('loader').classList.add('hidden')
+  document.getElementById('loader').classList.remove('flex')
+}
+
+// SHOW SKELETON LOADER
+function showSkeleton(){
+  document.getElementById('skeletonLoader').classList.remove('hidden')
+}
+
+// HIDE SKELETON LOADER
+function hideSkeleton(){
+  document.getElementById('skeletonLoader').classList.add('hidden')
+}
+
+// LOAD POSTS
+let page = 1
+
+async function loadPosts(reset=false){
+  if(isLoading) return
+  
+  if(reset){
+    grid.innerHTML=""
+    page=1
+    showSkeleton()
+  } else {
+    showLoader()
+  }
+
+  try {
+    const res = await fetch(API + "/post/all?page="+page)
+    const data = await res.json()
+    
+    hideSkeleton()
+    hideLoader()
+
+    data.forEach((p, index)=>{
+      setTimeout(() => {
+        const div = document.createElement("div")
+        div.className="card bg-white shadow-md overflow-hidden"
+        
+        let mediaContent = ''
+        if(p.type==="image"){
+          mediaContent = `<img src="${p.fileUrl}" alt="${p.title || 'Pin'}" class="w-full object-cover" style="max-height: 400px;"/>`
+        } else {
+          mediaContent = `<video src="${p.fileUrl}" controls class="w-full" style="max-height: 400px;"></video>`
+        }
+
+        div.innerHTML = `
+          ${mediaContent}
+          ${p.title ? `<div class="p-3"><p class="font-medium text-sm text-gray-800 line-clamp-2">${p.title}</p></div>` : ''}
+          <div class="absolute inset-0 bg-black/0 hover:bg-black/30 transition-all duration-300 flex items-end opacity-0 hover:opacity-100 p-3">
+            <button class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition-colors">
+              Save
+            </button>
+          </div>
+        `
+        
+        div.style.position = 'relative'
+        grid.appendChild(div)
+      }, index * 50)
+    })
+
+    page++
+  } catch (error) {
+    console.error('Failed to load posts:', error)
+    hideSkeleton()
+    hideLoader()
+  }
+}
+
+// SCROLL LOAD WITH DEBOUNCE
+let scrollTimeout
+window.onscroll = ()=>{
+  if(scrollTimeout) clearTimeout(scrollTimeout)
+  
+  scrollTimeout = setTimeout(() => {
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 && !isLoading){
+      loadPosts()
+    }
+  }, 150)
+}
+
+// INIT
+loadPosts()
+</script>
+
+</body>
+</html>
