@@ -1,4 +1,8 @@
 
+<img src="https://ik.imagekit.io/xvqovhmcyr/Pinterest%20Feed%20-%20Brave%204_8_2026%2011_24_05%20AM.png">
+
+---
+
 # 🎨 Pinterest Clone
 
 A fully functional Pinterest-style platform with image/video sharing, user auth, and masonry grid layout.

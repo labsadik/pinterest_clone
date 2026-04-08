@@ -4,141 +4,157 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pinterest Feed</title>
+
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root {
-  --pinterest-red: #E60023;
-  --pinterest-red-hover: #AD081B;
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #EFEFEF;
-  --text-primary: #111111;
-  --text-secondary: #5F5F5F;
-  --border-color: #CDCDCD;
+  --primary: #E60023;
+  --primary-hover: #AD081B;
+  --bg-main: #F0F0F0;
+  --bg-white: #FFFFFF;
+  --text-dark: #111111;
+  --text-gray: #5F5F5F;
+  --text-light: #767676;
+  --border-color: #DDDDDD;
+  --success: #00C853;
+  --error: #DC2626;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.18);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition-fast: all 0.15s ease;
+  --transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
   box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  background-color: var(--bg-secondary);
   margin: 0;
   padding: 0;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-main);
+  line-height: 1.5;
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
 /* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: var(--border-color); 
+  border-radius: 20px;
+  transition: background 0.2s;
 }
+::-webkit-scrollbar-thumb:hover { background: var(--text-gray); }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cdcdcd;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a0a0a0;
-}
-
-/* HEADER STYLES */
+/* Header Styles */
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 100;
-  padding: 12px 24px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  padding: 0.75rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  border-bottom: 1px solid var(--border-color);
+  gap: 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.pinterest-logo {
-  color: var(--pinterest-red);
-  font-size: 32px;
+.logo {
+  font-size: 1.75rem;
+  color: var(--primary);
   cursor: pointer;
   transition: transform 0.2s;
+  flex-shrink: 0;
 }
-
-.pinterest-logo:hover {
-  transform: scale(1.05);
-}
+.logo:hover { transform: scale(1.05); }
 
 .search-container {
   flex: 1;
-  max-width: 720px;
+  max-width: 700px;
   position: relative;
 }
 
 .search-input {
   width: 100%;
-  padding: 14px 48px 14px 20px;
-  border-radius: 28px;
+  padding: 0.875rem 3.25rem 0.875rem 1.25rem;
+  border-radius: 24px;
   border: none;
-  background-color: var(--bg-secondary);
-  font-size: 16px;
+  background: var(--bg-main);
+  font-size: 0.9375rem;
   outline: none;
-  transition: all 0.3s;
+  transition: var(--transition-normal);
 }
-
 .search-input:focus {
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.15);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(230, 0, 35, 0.12), var(--shadow-sm);
 }
+.search-input::placeholder { color: var(--text-light); }
 
-.search-icon {
+.search-btn {
   position: absolute;
-  right: 18px;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
-  font-size: 18px;
+  background: var(--primary);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+}
+.search-btn:hover { 
+  background: var(--primary-hover);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.25rem;
+  flex-shrink: 0;
 }
 
 .icon-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 1.125rem;
+  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-  background: transparent;
-  position: relative;
+  transition: var(--transition-fast);
 }
-
-.icon-btn:hover {
-  background-color: var(--bg-secondary);
-}
-
-.icon-btn i {
-  font-size: 22px;
-  color: var(--text-primary);
-}
+.icon-btn:hover { background: var(--bg-main); }
+.icon-btn:active { transform: scale(0.95); }
 
 .notification-badge {
   position: absolute;
@@ -146,9 +162,14 @@ body {
   right: 7px;
   width: 9px;
   height: 9px;
-  background-color: var(--pinterest-red);
+  background: var(--primary);
   border-radius: 50%;
   border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .user-avatar {
@@ -156,906 +177,2106 @@ body {
   height: 44px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 17px;
-  cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--transition-fast);
   border: 2px solid transparent;
 }
-
 .user-avatar:hover {
+  border-color: white;
+  box-shadow: var(--shadow-sm);
   transform: scale(1.05);
-  border-color: var(--border-color);
 }
 
-/* DROPDOWN MENU */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   right: 0;
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  min-width: 220px;
-  padding: 8px 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 240px;
+  padding: 0.5rem;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-10px) scale(0.95);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 200;
+  transform: translateY(-8px) scale(0.96);
+  transition: var(--transition-normal);
+  z-index: 1100;
 }
-
-.dropdown-menu.show {
+.dropdown-menu.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
 }
 
-.dropdown-item {
+.menu-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 13px 18px;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
   cursor: pointer;
-  transition: background-color 0.15s;
-  color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 400;
+  color: var(--text-dark);
+  font-size: 0.9375rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
 }
+.menu-item:hover { background: var(--bg-main); }
+.menu-item i { width: 20px; text-align: center; color: var(--text-gray); }
 
-.dropdown-item:hover {
-  background-color: var(--bg-secondary);
-}
-
-.dropdown-item i {
-  width: 20px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 17px;
-}
-
-.dropdown-divider {
+.menu-divider {
   height: 1px;
-  background-color: var(--border-color);
-  margin: 8px 0;
+  background: var(--border-color);
+  margin: 0.5rem 0;
 }
 
-.logout-item {
-  color: var(--pinterest-red);
-  font-weight: 500;
-}
+.danger-item { color: var(--error); font-weight: 500; }
+.danger-item i { color: var(--error); }
 
-.logout-item i {
-  color: var(--pinterest-red);
-}
-
-/* MAIN FEED */
-.feed-container {
-  padding: 24px;
+/* Main Content */
+.main-content {
+  margin-top: 80px;
+  padding: 1.5rem 2rem;
   max-width: 1800px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .masonry-grid {
   column-count: 7;
-  column-gap: 16px;
+  column-gap: 1rem;
 }
 
-@media (max-width: 1700px) {
-  .masonry-grid { column-count: 6; }
-}
-
-@media (max-width: 1400px) {
-  .masonry-grid { column-count: 5; }
-}
-
-@media (max-width: 1100px) {
-  .masonry-grid { column-count: 4; }
-}
-
-@media (max-width: 800px) {
-  .masonry-grid { column-count: 3; }
-  
-  .header {
-    padding: 10px 16px;
-    gap: 12px;
-  }
-  
-  .search-container {
-    max-width: 480px;
-  }
-  
-  .icon-btn {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 550px) {
-  .masonry-grid { column-count: 2; }
-  
-  .feed-container {
-    padding: 12px;
-  }
-  
-  .header {
-    padding: 8px 12px;
-  }
-  
-  .pinterest-logo {
-    font-size: 26px;
-  }
-  
-  .search-input {
-    font-size: 14px;
-    padding: 11px 42px 11px 16px;
-  }
-}
-
-/* PIN CARD */
+/* Pin Card */
 .pin-card {
   break-inside: avoid;
-  margin-bottom: 16px;
-  border-radius: 16px;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  position: relative;
-  cursor: zoom-in;
   background: white;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-normal);
 }
-
 .pin-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
-.pin-image-wrapper {
+.pin-media-wrapper {
   position: relative;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
 }
 
 .pin-image {
   width: 100%;
   display: block;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  transition: transform 0.4s ease;
+}
+.pin-card:hover .pin-image { transform: scale(1.03); }
+
+/* Broken State */
+.pin-card.broken-state .pin-media-wrapper {
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%);
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.pin-card:hover .pin-image {
-  transform: scale(1.03);
+.broken-placeholder {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  color: var(--error);
+}
+.broken-placeholder i { 
+  font-size: 3.5rem; 
+  margin-bottom: 1rem; 
+  opacity: 0.4;
+  display: block;
+}
+.broken-placeholder p { 
+  font-size: 1rem; 
+  font-weight: 600; 
+  margin-bottom: 0.5rem;
+}
+.broken-placeholder small { 
+  font-size: 0.875rem; 
+  color: var(--text-gray); 
+  font-weight: 400;
 }
 
-.pin-overlay {
+.remove-broken-action {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.4) 0%,
-    transparent 25%,
-    transparent 75%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  align-items: flex-end;
-  padding: 14px;
-}
-
-.pin-card:hover .pin-overlay {
-  opacity: 1;
-}
-
-.pin-actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.save-btn {
-  flex: 1;
-  background-color: var(--pinterest-red);
-  color: white;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.92);
   border: none;
-  padding: 11px 18px;
-  border-radius: 24px;
-  font-weight: 600;
-  font-size: 14px;
+  color: white;
+  font-size: 0.9375rem;
   cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+.remove-broken-action:hover { 
+  transform: scale(1.1) rotate(90deg);
+  background: var(--error);
 }
 
-.save-btn:hover {
-  background-color: var(--pinterest-red-hover);
-  transform: scale(1.02);
+/* Video Card */
+.video-container {
+  position: relative;
+  width: 100%;
+  background: #000;
+}
+.video-container video {
+  width: 100%;
+  display: block;
+  object-fit: cover;
 }
 
-.action-icon-btn {
+.video-overlay-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%);
+  padding: 2rem 1rem 1rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.pin-card:hover .video-overlay-controls { opacity: 1; }
+
+.progress-bar-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 2px;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.video-control-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.control-group-left,
+.control-group-right {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.video-control-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: var(--transition-fast);
+}
+.video-control-btn:hover { opacity: 1; transform: scale(1.1); }
+
+.time-display {
+  color: white;
+  font-size: 0.8125rem;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.volume-slider {
+  width: 70px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255,255,255,0.35);
+  border-radius: 2px;
+  outline: none;
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(230, 0, 35, 0.94);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 20px rgba(230, 0, 35, 0.4);
+}
+.play-button-overlay:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 6px 28px rgba(230, 0, 35, 0.55);
+}
+
+.pin-info-section {
+  padding: 0.75rem 0.625rem;
+}
+.pin-title-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-dark);
+}
+
+/* Loading States */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+.spinner-element {
   width: 42px;
   height: 42px;
+  border: 3.5px solid #E0E0E0;
+  border-top-color: var(--primary);
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: var(--text-primary);
-  font-size: 16px;
+  animation: spin-animation 0.75s linear infinite;
 }
-
-.action-icon-btn:hover {
-  background-color: white;
-  transform: scale(1.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pin-info {
-  padding: 10px 0;
-}
-
-.pin-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.45;
-  margin: 0;
-  padding: 0 6px;
-}
-
-.pin-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 6px 0;
-}
-
-.user-small-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.username {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* LOADING STATES */
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 0;
-}
-
-.spinner {
-  width: 46px;
-  height: 46px;
-  border: 4px solid #e0e0e0;
-  border-top-color: var(--pinterest-red);
-  border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-}
-
-@keyframes spin {
+@keyframes spin-animation {
   to { transform: rotate(360deg); }
 }
 
 .skeleton-loader {
-  animation: pulse 1.6s ease-in-out infinite;
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
+  border-radius: var(--radius-lg);
 }
-
-@keyframes pulse {
+@keyframes skeleton-pulse {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
-
 .skeleton-card {
   break-inside: avoid;
-  margin-bottom: 16px;
-  border-radius: 16px;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
-/* UPLOAD MODAL */
+/* End of Content Message */
+.end-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-light);
+  font-size: 0.9375rem;
+}
+.end-message i {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+  opacity: 0.4;
+}
+
+/* Upload Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(6px);
-  z-index: 300;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: var(--transition-normal);
+  padding: 1.5rem;
 }
-
-.modal-backdrop.show {
+.modal-backdrop.visible {
   opacity: 1;
   visibility: visible;
 }
 
-.modal-content {
+.modal-dialog {
   background: white;
-  border-radius: 32px;
-  padding: 36px;
-  max-width: 540px;
-  width: 92%;
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  max-width: 580px;
+  width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  transform: scale(0.92) translateY(30px);
+  transform: scale(0.92) translateY(24px);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
 }
-
-.modal-backdrop.show .modal-content {
+.modal-backdrop.visible .modal-dialog {
   transform: scale(1) translateY(0);
 }
 
 .modal-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  align-items: center;
+  margin-bottom: 1.75rem;
 }
-
-.modal-title {
-  font-size: 30px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
+.modal-heading {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-dark);
 }
 
 .close-modal-btn {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
-  background: var(--bg-secondary);
+  background: var(--bg-main);
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+.close-modal-btn:hover { 
+  background: #E0E0E0; 
+  transform: rotate(90deg);
+}
+.close-modal-btn:disabled { 
+  opacity: 0.45; 
+  cursor: not-allowed; 
+  transform: none;
+}
+
+.form-field { margin-bottom: 1.5rem; }
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.625rem;
+  font-size: 0.9375rem;
+  color: var(--text-dark);
+}
+.text-input {
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition-fast);
+  background: white;
+}
+.text-input:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 0 3px rgba(230, 0, 35, 0.08);
+}
+.text-input:disabled { 
+  background: #F5F5F5; 
+  cursor: not-allowed; 
+  opacity: 0.55;
+}
+
+.upload-dropzone {
+  border: 2.5px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  background: #FAFAFA;
+  transition: var(--transition-normal);
+  position: relative;
+}
+.upload-dropzone:not(.has-file-selected):not(.is-uploading):hover {
+  border-color: var(--primary);
+  background: #FFF5F5;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+.upload-dropzone.has-file-selected {
+  border-style: solid;
+  border-color: var(--success);
+  background: #F1FDF4;
+  padding: 1.25rem;
+}
+.upload-dropzone.is-uploading {
+  border-style: solid;
+  border-color: var(--primary);
+  background: #FFF5F5;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.upload-icon-large {
+  font-size: 3.25rem;
+  color: var(--text-gray);
+  margin-bottom: 1rem;
+  display: block;
+}
+.upload-main-text {
+  color: var(--text-gray);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.upload-sub-text {
+  font-size: 0.8125rem;
+  color: var(--text-light);
+  margin-top: 0.375rem;
+}
+.hidden-file-input { display: none; }
+
+.file-preview-area {
+  display: none;
+  margin-top: 1.25rem;
+}
+.file-preview-area.visible { display: block; }
+
+.preview-media-container {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+  max-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.preview-image-element {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+.preview-video-element {
+  max-width: 100%;
+  max-height: 320px;
+  display: block;
+}
+
+.delete-file-btn {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: none;
+  color: white;
+  font-size: 0.875rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.25s;
-  font-size: 20px;
-  color: var(--text-primary);
+  z-index: 10;
+  transition: var(--transition-fast);
 }
+.delete-file-btn:hover { transform: scale(1.1); }
 
-.close-modal-btn:hover {
-  background: #d0d0d0;
-  transform: rotate(90deg) scale(1.05);
-}
-
-.form-group {
-  margin-bottom: 22px;
-}
-
-.form-label {
-  display: block;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 14px 18px;
-  border: 2px solid var(--border-color);
-  border-radius: 14px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.form-input:focus {
-  border-color: #0084ff;
-}
-
-.upload-area {
-  border: 2.5px dashed var(--border-color);
-  border-radius: 18px;
-  padding: 48px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-  background: #fafafa;
-}
-
-.upload-area:hover {
-  border-color: var(--pinterest-red);
-  background: #fff5f5;
-  transform: translateY(-2px);
-}
-
-.upload-area i {
-  font-size: 52px;
-  color: var(--text-secondary);
-  margin-bottom: 14px;
-}
-
-.upload-area p {
-  color: var(--text-secondary);
-  font-size: 15px;
-  margin: 0;
-}
-
-.file-input {
-  display: none;
-}
-
-.modal-actions {
+.file-metadata-display {
+  background: var(--bg-main);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 1rem;
   display: flex;
-  gap: 14px;
-  margin-top: 28px;
+  align-items: center;
+  gap: 0.75rem;
 }
-
-.btn {
-  flex: 1;
-  padding: 15px 26px;
-  border-radius: 26px;
-  font-size: 16px;
+.file-type-indicator {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+.file-details-text { flex: 1; min-width: 0; }
+.file-name-display {
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-size-display {
+  font-size: 0.8125rem;
+  color: var(--text-gray);
+}
+.change-file-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-color);
+  background: white;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+.change-file-btn:hover { 
+  border-color: var(--primary); 
+  color: var(--primary);
+}
+
+/* Progress Section */
+.upload-progress-section {
+  display: none;
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--primary);
+}
+.upload-progress-section.visible { 
+  display: block; 
+  animation: slideUpFade 0.3s ease; 
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.progress-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.875rem;
+}
+.status-indicator-group {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.status-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #FFCCCC;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin-animation 0.8s linear infinite;
+}
+.status-spinner-small.completed {
+  animation: none;
+  background: var(--success);
+  color: white;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-label-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.percentage-value {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 48px;
+  text-align: right;
+}
+.progress-bar-outer {
+  width: 100%;
+  height: 10px;
+  background: #FFD6D6;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.875rem;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, #FF4D6D 100%);
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.25s ease;
+  position: relative;
+}
+.progress-bar-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  animation: shimmer-effect 1.5s infinite;
+}
+@keyframes shimmer-effect {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.progress-details-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-gray);
+}
+
+.upload-progress-section.success-state {
+  background: linear-gradient(135deg, #F1F8F4 0%, #D4EDDA 100%);
+  border-color: var(--success);
+}
+.upload-progress-section.success-state .percentage-value,
+.upload-progress-section.success-state .status-label-text {
+  color: var(--success);
+}
+.upload-progress-section.success-state .progress-bar-outer {
+  background: #B8E6C8;
+}
+.upload-progress-section.success-state .progress-bar-inner {
+  background: linear-gradient(90deg, var(--success) 0%, #28A745 100%);
+}
+.upload-progress-section.success-state .progress-bar-inner::after {
+  animation: none;
+}
+
+.upload-progress-section.error-state {
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%);
+  border-color: var(--error);
+}
+.upload-progress-section.error-state .status-label-text,
+.upload-progress-section.error-state .percentage-value {
+  color: var(--error);
+}
+.upload-progress-section.error-state .progress-bar-outer {
+  background: #FFCDD2;
+}
+.upload-progress-section.error-state .progress-bar-inner {
+  background: var(--error);
+}
+
+.modal-footer-actions {
+  display: flex;
+  gap: 0.875rem;
+  margin-top: 1.875rem;
+}
+.action-button {
+  flex: 1;
+  padding: 0.9375rem 1.5rem;
+  border-radius: 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition-normal);
 }
-
-.btn-secondary {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
+.button-secondary {
+  background: var(--bg-main);
+  color: var(--text-dark);
 }
-
-.btn-secondary:hover {
-  background: #e0e0e0;
-}
-
-.btn-primary {
-  background: var(--pinterest-red);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--pinterest-red-hover);
+.button-secondary:hover { 
+  background: #E0E0E0; 
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(230, 0, 35, 0.3);
+}
+.button-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(230, 0, 35, 0.25);
+}
+.button-primary:hover:not(:disabled) { 
+  background: var(--primary-hover); 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(230, 0, 35, 0.35);
+}
+.button-primary:disabled { 
+  background: #CCCCCC; 
+  cursor: not-allowed; 
+  box-shadow: none;
+}
+.button-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.button-loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin-animation 0.8s linear infinite;
 }
 
-/* TOAST NOTIFICATION */
-.toast {
+/* Preview Modal */
+.preview-modal-overlay {
   position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%) translateY(120px);
-  background: var(--text-primary);
+  inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-normal);
+  padding: 2rem;
+}
+.preview-modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.preview-content-wrapper {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.93);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.preview-modal-overlay.visible .preview-content-wrapper {
+  transform: scale(1);
+}
+
+.preview-media-display {
+  position: relative;
+  max-width: 90vw;
+  max-height: 82vh;
+  background: #000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fullsize-preview-image {
+  max-width: 90vw;
+  max-height: 82vh;
+  object-fit: contain;
+}
+.fullsize-video-wrapper {
+  position: relative;
+  max-width: 90vw;
+  max-height: 82vh;
+}
+.fullsize-video-wrapper video {
+  max-width: 90vw;
+  max-height: 82vh;
+  display: block;
+}
+
+.fullscreen-video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.94) 0%, transparent 100%);
+  padding: 1.5rem 1.25rem 1.125rem;
+}
+
+.close-preview-button {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: none;
   color: white;
-  padding: 16px 28px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+.close-preview-button:hover { 
+  background: rgba(255,255,255,0.22); 
+  transform: rotate(90deg);
+}
+
+.preview-action-buttons {
+  display: flex;
+  gap: 0.875rem;
+  margin-top: 1.375rem;
+}
+.preview-action-btn {
+  padding: 0.8125rem 1.875rem;
+  border-radius: 24px;
+  border: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-normal);
+}
+.download-action-btn {
+  background: var(--primary);
+  color: white;
+}
+.download-action-btn:hover { 
+  background: var(--primary-hover); 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(230, 0, 35, 0.45);
+}
+.save-action-btn {
+  background: white;
+  color: var(--text-dark);
+}
+.save-action-btn:hover { 
+  background: #F0F0F0; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(140px);
+  background: var(--text-dark);
+  color: white;
+  padding: 1rem 1.875rem;
   border-radius: 28px;
   font-weight: 500;
-  font-size: 15px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-  z-index: 400;
+  font-size: 0.9375rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 5000;
   opacity: 0;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.toast.show {
+.toast-notification.visible {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
+.toast-notification.error-type { background: var(--error); }
+
+/* Responsive Design */
+@media (max-width: 1700px) {
+  .masonry-grid { column-count: 6; }
+}
+@media (max-width: 1400px) {
+  .masonry-grid { column-count: 5; }
+}
+@media (max-width: 1100px) {
+  .masonry-grid { column-count: 4; }
+}
+@media (max-width: 800px) {
+  .masonry-grid { column-count: 3; }
+  .header { padding: 0.625rem 1.25rem; gap: 1rem; }
+  .search-container { max-width: 420px; }
+  .icon-btn, .user-avatar { width: 40px; height: 40px; font-size: 1rem; }
+  .main-content { padding: 1.25rem 1.25rem; margin-top: 72px; }
+}
+@media (max-width: 550px) {
+  .masonry-grid { column-count: 2; }
+  .main-content { padding: 1rem; margin-top: 68px; }
+  .header { padding: 0.5rem 0.875rem; }
+  .logo { font-size: 1.5rem; }
+  .search-input { font-size: 0.875rem; padding: 0.75rem 2.75rem 0.75rem 1rem; }
+  .modal-dialog { padding: 1.5rem; border-radius: var(--radius-lg); }
+  .preview-action-buttons { flex-direction: column; width: 100%; }
+  .preview-action-btn { justify-content: center; }
+}
 </style>
 </head>
+<body>
 
-<body class="bg-white min-h-screen">
-
-<!-- HEADER ONLY -->
-<header class="header">
-  <!-- Logo -->
-  <div class="logo-section">
-    <i class="fab fa-pinterest pinterest-logo"></i>
-  </div>
-
-  <!-- Search Bar -->
+<!-- HEADER -->
+<header class="header" role="banner">
+  <i class="fab fa-pinterest logo" aria-label="Pinterest Home"></i>
+  
   <div class="search-container">
-    <input 
-      type="text" 
-      placeholder="Search for ideas" 
-      class="search-input"
-    />
-    <i class="fas fa-search search-icon"></i>
+    <input type="text" class="search-input" placeholder="Search for inspiration" aria-label="Search"/>
+    <button class="search-btn" aria-label="Search"><i class="fas fa-search"></i></button>
   </div>
-
-  <!-- Action Buttons -->
-  <div class="header-actions">
-    <button class="icon-btn" onclick="showUpload()" title="Create">
+  
+  <nav class="header-actions" role="navigation">
+    <button class="icon-btn" id="createPinBtn" aria-label="Create Pin">
       <i class="fas fa-plus"></i>
       <span class="notification-badge"></span>
     </button>
-    
-    <button class="icon-btn" title="Notifications">
+    <button class="icon-btn" aria-label="Notifications">
       <i class="far fa-bell"></i>
       <span class="notification-badge"></span>
     </button>
-    
-    <button class="icon-btn" title="Messages">
+    <button class="icon-btn" aria-label="Messages">
       <i class="fas fa-comment-dots"></i>
     </button>
     
-    <!-- User Avatar with Dropdown -->
-    <div style="position: relative;" onclick="toggleUserMenu(event)">
-      <div class="user-avatar">A</div>
-      
-      <!-- Dropdown Menu with LOGOUT -->
-      <div id="userMenuDropdown" class="dropdown-menu">
-        <div class="dropdown-item">
-          <i class="fas fa-user-circle"></i>
-          <span>Your Profile</span>
-        </div>
-        <div class="dropdown-item">
-          <i class="fas fa-cog"></i>
-          <span>Settings</span>
-        </div>
-        <div class="dropdown-item">
-          <i class="fas fa-question-circle"></i>
-          <span>Help</span>
-        </div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item logout-item" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Log out</span>
-        </div>
+    <div style="position:relative" id="userMenuContainer">
+      <button class="user-avatar" id="avatarButton" aria-label="User Menu">A</button>
+      <div class="dropdown-menu" id="userDropdownMenu" role="menu">
+        <div class="menu-item" role="menuitem"><i class="fas fa-user-circle"></i> Your Profile</div>
+        <div class="menu-item" role="menuitem"><i class="fas fa-cog"></i> Account Settings</div>
+        <div class="menu-item" role="menuitem"><i class="fas fa-question-circle"></i> Help Center</div>
+        <div class="menu-divider"></div>
+        <div class="menu-item danger-item" id="logoutMenuItem" role="menuitem"><i class="fas fa-sign-out-alt"></i> Log Out</div>
       </div>
     </div>
-  </div>
+  </nav>
 </header>
 
-<!-- FEED GRID ONLY -->
-<main class="feed-container">
-  <div id="grid" class="masonry-grid"></div>
+<!-- MAIN CONTENT -->
+<main class="main-content" role="main">
+  <div id="pinsGrid" class="masonry-grid"></div>
   
-  <!-- Loading Spinner -->
-  <div id="loader" class="hidden spinner-container">
-    <div class="spinner"></div>
+  <div id="loadingIndicator" class="loading-indicator" style="display:none;">
+    <div class="spinner-element"></div>
   </div>
   
-  <!-- Skeleton Loader -->
-  <div id="skeletonLoader" class="masonry-grid hidden">
-    <div class="skeleton-card skeleton-loader h-64"></div>
-    <div class="skeleton-card skeleton-loader h-80"></div>
-    <div class="skeleton-card skeleton-loader h-72"></div>
-    <div class="skeleton-card skeleton-loader h-96"></div>
-    <div class="skeleton-card skeleton-loader h-68"></div>
-    <div class="skeleton-card skeleton-loader h-84"></div>
-    <div class="skeleton-card skeleton-loader h-76"></div>
+  <div id="skeletonLoader" class="masonry-grid" style="display:none;">
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:280px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:340px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:300px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:380px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:260px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:350px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:310px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:330px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:290px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:370px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:270px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:320px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:360px"></div></div>
+    <div class="skeleton-card"><div class="skeleton-loader" style="height:250px"></div></div>
+  </div>
+
+  <div id="endOfContentMessage" class="end-message" style="display:none;">
+    <i class="fas fa-check-circle"></i>
+    You've seen it all!
   </div>
 </main>
 
 <!-- UPLOAD MODAL -->
-<div id="uploadModal" class="modal-backdrop" onclick="handleBackdropClick(event)">
-  <div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-backdrop" id="uploadModal" role="dialog" aria-modal="true" aria-labelledby="uploadModalTitle">
+  <div class="modal-dialog" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <h2 class="modal-title">Create Pin</h2>
-      <button class="close-modal-btn" onclick="hideUpload()">
+      <h2 class="modal-heading" id="uploadModalTitle">Create Pin</h2>
+      <button class="close-modal-btn" id="closeUploadModalBtn" aria-label="Close modal">
         <i class="fas fa-times"></i>
       </button>
     </div>
     
-    <form onsubmit="event.preventDefault(); upload();">
-      <div class="form-group">
-        <label class="form-label">Title</label>
-        <input 
-          type="text" 
-          id="title"
-          placeholder="Add a title"
-          class="form-input"
-        />
+    <form id="uploadFormElement" novalidate>
+      <div class="form-field">
+        <label class="form-label" for="pinTitleInput">Title</label>
+        <input type="text" id="pinTitleInput" class="text-input" placeholder="Add a descriptive title" maxlength="100"/>
       </div>
       
-      <div class="form-group">
-        <label class="form-label">Image or Video</label>
-        <div class="upload-area" onclick="document.getElementById('file').click()">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p>Click to upload or drag and drop</p>
-          <p style="font-size: 13px; margin-top: 6px; color: #999;">PNG, JPG, GIF up to 20MB</p>
-          <input type="file" id="file" class="file-input" accept="image/*,video/*"/>
+      <div class="form-field">
+        <label class="form-label">Media File</label>
+        
+        <div class="upload-dropzone" id="uploadDropzone">
+          <i class="fas fa-cloud-upload-alt upload-icon-large" id="uploadIconDisplay"></i>
+          <p class="upload-main-text" id="uploadMainText">Click to upload or drag & drop</p>
+          <p class="upload-sub-text" id="uploadSubText">PNG, JPG, GIF, MP4 up to 20MB</p>
+          <input type="file" id="fileInputElement" class="hidden-file-input" accept="image/*,video/*"/>
+        </div>
+        
+        <div class="file-preview-area" id="filePreviewArea">
+          <div class="preview-media-container" id="previewContainer"></div>
+          <div class="file-metadata-display">
+            <div class="file-type-indicator" id="fileTypeIcon"><i class="fas fa-image"></i></div>
+            <div class="file-details-text">
+              <p class="file-name-display" id="fileNameDisplay">filename.jpg</p>
+              <p class="file-size-display" id="fileSizeDisplay">0 KB</p>
+            </div>
+            <button type="button" class="change-file-btn" id="changeFileBtn">Change File</button>
+          </div>
+        </div>
+        
+        <div class="upload-progress-section" id="uploadProgressSection">
+          <div class="progress-header-row">
+            <div class="status-indicator-group">
+              <div class="status-spinner-small" id="progressSpinnerIcon"></div>
+              <span class="status-label-text" id="progressStatusText">Preparing...</span>
+            </div>
+            <span class="percentage-value" id="progressPercentageValue">0%</span>
+          </div>
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="progressBarInner"></div>
+          </div>
+          <div class="progress-details-row">
+            <span id="progressSpeedInfo"><i class="fas fa-arrow-up"></i> Initializing...</span>
+            <span id="progressTimeInfo"><i class="fas fa-clock"></i> Please wait...</span>
+          </div>
         </div>
       </div>
       
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick="hideUpload()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Upload</button>
+      <div class="modal-footer-actions">
+        <button type="button" class="action-button button-secondary" id="cancelUploadBtn">Cancel</button>
+        <button type="submit" class="action-button button-primary" id="submitUploadBtn" disabled>
+          <i class="fas fa-cloud-upload-alt"></i> Create Pin
+        </button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- TOAST NOTIFICATION -->
-<div id="toast" class="toast"></div>
+<!-- PREVIEW MODAL -->
+<div class="preview-modal-overlay" id="previewModal" role="dialog" aria-modal="true">
+  <div class="preview-content-wrapper" onclick="event.stopPropagation()">
+    <button class="close-preview-button" id="closePreviewBtn" aria-label="Close preview">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="preview-media-display" id="previewMediaContainer"></div>
+    <div class="preview-action-buttons">
+      <button class="preview-action-btn download-action-btn" id="downloadPreviewBtn">
+        <i class="fas fa-download"></i> Download
+      </button>
+      <button class="preview-action-btn save-action-btn" id="savePreviewBtn">
+        <i class="fas fa-bookmark"></i> Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-notification" id="toastNotification" role="alert" aria-live="polite"></div>
 
 <script>
-const API = "https://pinterest-clone-c9rz.onrender.com/api";
-let isLoading = false;
+'use strict';
 
-// 🔐 CHECK LOGIN
-if(!localStorage.getItem("token")){
-  window.location.href = "login.html";
+// ==================== CONFIGURATION ====================
+const APP_CONFIG = {
+  API_ENDPOINT: 'https://pinterest-clone-c9rz.onrender.com/api',
+  DEBOUNCE_DELAY: 150,
+  SCROLL_THRESHOLD: 400,
+  TOAST_DISPLAY_TIME: 3000,
+  MAX_FILE_SIZE_BYTES: 20 * 1024 * 1024,
+  ACCEPTED_FILE_TYPES: ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/webm'],
+  RANDOM_HEIGHTS: [240,280,320,360,400,260,300,340,380],
+  BROKEN_PINS_STORAGE_KEY: 'pinterest_broken_pins_cache',
+  MAX_RETRIES: 2,
+  RETRY_DELAY: 1000
+};
+
+// ==================== APPLICATION STATE ====================
+const appState = {
+  authToken: localStorage.getItem('token') || '',
+  currentPage: 1,
+  isLoadingData: false,
+  isUploadingFile: false,
+  selectedFileObject: null,
+  currentPreviewData: null,
+  brokenPinsSet: new Set(JSON.parse(localStorage.getItem(APP_CONFIG.BROKEN_PINS_STORAGE_KEY) || '[]')),
+  hasMorePages: true,
+  isScrollListenerActive: true,
+  lastScrollPosition: 0,
+  scrollThrottleTimer: null
+};
+
+// Persist broken pins to localStorage
+function persistBrokenPins() {
+  localStorage.setItem(APP_CONFIG.BROKEN_PINS_STORAGE_KEY, JSON.stringify([...appState.brokenPinsSet]));
 }
 
-// ==================== LOGOUT FUNCTION ====================
-function logout(){
-  localStorage.removeItem("token");
-  showToast("Logged out successfully! 👋");
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 900);
+// ==================== DOM ELEMENT CACHE ====================
+const domElements = {
+  pinsGrid: document.getElementById('pinsGrid'),
+  loadingIndicator: document.getElementById('loadingIndicator'),
+  skeletonLoader: document.getElementById('skeletonLoader'),
+  endOfContentMessage: document.getElementById('endOfContentMessage'),
+  toastNotification: document.getElementById('toastNotification'),
+  uploadModal: document.getElementById('uploadModal'),
+  uploadFormElement: document.getElementById('uploadFormElement'),
+  closeUploadModalBtn: document.getElementById('closeUploadModalBtn'),
+  cancelUploadBtn: document.getElementById('cancelUploadBtn'),
+  submitUploadBtn: document.getElementById('submitUploadBtn'),
+  pinTitleInput: document.getElementById('pinTitleInput'),
+  uploadDropzone: document.getElementById('uploadDropzone'),
+  fileInputElement: document.getElementById('fileInputElement'),
+  filePreviewArea: document.getElementById('filePreviewArea'),
+  previewContainer: document.getElementById('previewContainer'),
+  fileTypeIcon: document.getElementById('fileTypeIcon'),
+  fileNameDisplay: document.getElementById('fileNameDisplay'),
+  fileSizeDisplay: document.getElementById('fileSizeDisplay'),
+  changeFileBtn: document.getElementById('changeFileBtn'),
+  uploadIconDisplay: document.getElementById('uploadIconDisplay'),
+  uploadMainText: document.getElementById('uploadMainText'),
+  uploadSubText: document.getElementById('uploadSubText'),
+  uploadProgressSection: document.getElementById('uploadProgressSection'),
+  progressSpinnerIcon: document.getElementById('progressSpinnerIcon'),
+  progressStatusText: document.getElementById('progressStatusText'),
+  progressPercentageValue: document.getElementById('progressPercentageValue'),
+  progressBarInner: document.getElementById('progressBarInner'),
+  progressSpeedInfo: document.getElementById('progressSpeedInfo'),
+  progressTimeInfo: document.getElementById('progressTimeInfo'),
+  previewModal: document.getElementById('previewModal'),
+  previewMediaContainer: document.getElementById('previewMediaContainer'),
+  closePreviewBtn: document.getElementById('closePreviewBtn'),
+  downloadPreviewBtn: document.getElementById('downloadPreviewBtn'),
+  savePreviewBtn: document.getElementById('savePreviewBtn'),
+  userDropdownMenu: document.getElementById('userDropdownMenu'),
+  avatarButton: document.getElementById('avatarButton'),
+  logoutMenuItem: document.getElementById('logoutMenuItem'),
+  createPinBtn: document.getElementById('createPinBtn')
+};
+
+// ==================== SECURITY UTILITIES ====================
+const SecurityUtils = {
+  escapeHtmlString(rawString) {
+    if (!rawString) return '';
+    const tempDiv = document.createElement('div');
+    tempDiv.textContent = rawString;
+    return tempDiv.innerHTML;
+  },
+  
+  sanitizeUrl(urlString) {
+    if (!urlString) return '';
+    try {
+      const parsedUrl = new URL(urlString);
+      return ['http:', 'https:'].includes(parsedUrl.protocol) ? urlString : '';
+    } catch (error) {
+      return '';
+    }
+  },
+  
+  isValidUrlFormat(urlString) {
+    if (!urlString) return false;
+    try {
+      const parsedUrl = new URL(urlString);
+      return parsedUrl.hostname && parsedUrl.protocol.startsWith('http');
+    } catch (error) {
+      return false;
+    }
+  },
+
+  extractPinIdFromUrl(urlString) {
+    if (!urlString) return null;
+    try {
+      const urlParts = urlString.split('/');
+      const filename = urlParts[urlParts.length - 1];
+      return filename.split('?')[0].split('#')[0];
+    } catch (error) {
+      return urlString;
+    }
+  }
+};
+
+// ==================== GENERAL UTILITIES ====================
+const UtilityHelpers = {
+  formatFileSize(bytes) {
+    if (!bytes) return '0 B';
+    const sizeUnits = ['B', 'KB', 'MB', 'GB'];
+    const unitIndex = Math.floor(Math.log(bytes) / Math.log(1024));
+    return `${(bytes / Math.pow(1024, unitIndex)).toFixed(unitIndex > 0 ? 1 : 0)} ${sizeUnits[unitIndex]}`;
+  },
+  
+  formatVideoDuration(seconds) {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  },
+  
+  generateRandomHeight() {
+    return APP_CONFIG.RANDOM_HEIGHTS[Math.floor(Math.random() * APP_CONFIG.RANDOM_HEIGHTS.length)] + 'px';
+  },
+  
+  debounceFunction(func, delayMs) {
+    let timeoutId;
+    return function(...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delayMs);
+    };
+  },
+  
+  throttleFunction(func, limitMs) {
+    let inThrottle = false;
+    return function(...args) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limitMs);
+      }
+    };
+  }
+};
+
+// ==================== TOAST NOTIFICATION SYSTEM ====================
+const ToastNotification = {
+  autoHideTimer: null,
+  
+  showMessage(messageText, messageType = '') {
+    if (this.autoHideTimer) {
+      clearTimeout(this.autoHideTimer);
+    }
+    
+    domElements.toastNotification.textContent = messageText;
+    domElements.toastNotification.className = `toast-notification visible${messageType ? ' error-type' : ''}`;
+    
+    this.autoHideTimer = setTimeout(() => {
+      domElements.toastNotification.classList.remove('visible');
+    }, APP_CONFIG.TOAST_DISPLAY_TIME);
+  }
+};
+
+// ==================== AUTHENTICATION CHECK ====================
+if (!appState.authToken) {
+  window.location.href = 'login.html';
 }
 
-// ==================== TOGGLE USER MENU ====================
-function toggleUserMenu(event){
-  if(event) event.stopPropagation();
-  const dropdown = document.getElementById('userMenuDropdown');
-  dropdown.classList.toggle('show');
+// ==================== USER MENU HANDLING ====================
+function toggleUserMenu(event) {
+  event?.stopPropagation();
+  domElements.userDropdownMenu.classList.toggle('active');
 }
 
-// CLOSE MENU WHEN CLICKING OUTSIDE
-document.addEventListener('click', function(e){
-  const dropdown = document.getElementById('userMenuDropdown');
-  if(!e.target.closest('.user-avatar') && !e.target.closest('.dropdown-menu')){
-    dropdown.classList.remove('show');
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('#userMenuContainer')) {
+    domElements.userDropdownMenu.classList.remove('active');
   }
 });
 
-// ==================== SHOW/HIDE UPLOAD MODAL ====================
-function showUpload(){
-  const modal = document.getElementById('uploadModal');
-  modal.classList.add('show');
+domElements.logoutMenuItem.addEventListener('click', () => {
+  localStorage.removeItem('token');
+  ToastNotification.showMessage('Successfully logged out!');
+  setTimeout(() => window.location.href = 'login.html', 800);
+});
+
+domElements.avatarButton.addEventListener('click', toggleUserMenu);
+
+// ==================== UPLOAD MODAL MANAGEMENT ====================
+function openUploadModal() {
+  domElements.uploadModal.classList.add('visible');
   document.body.style.overflow = 'hidden';
-  // Close dropdown if open
-  document.getElementById('userMenuDropdown').classList.remove('show');
+  domElements.userDropdownMenu.classList.remove('active');
 }
 
-function hideUpload(){
-  const modal = document.getElementById('uploadModal');
-  modal.classList.remove('show');
-  document.body.style.overflow = '';
-  
-  // Reset form
-  document.getElementById('title').value = '';
-  document.getElementById('file').value = '';
-}
-
-function handleBackdropClick(event){
-  if(event.target === event.currentTarget){
-    hideUpload();
+function closeUploadModal() {
+  if (appState.isUploadingFile) {
+    ToastNotification.showMessage('Please wait for upload to complete', 'error');
+    return;
   }
+  resetUploadForm();
+  domElements.uploadModal.classList.remove('visible');
+  document.body.style.overflow = '';
 }
 
-// ==================== UPLOAD FUNCTION ====================
-async function upload(){
-  const titleInput = document.getElementById('title');
-  const fileInput = document.getElementById('file');
+function resetUploadForm() {
+  domElements.uploadFormElement.reset();
+  domElements.fileInputElement.value = '';
+  appState.selectedFileObject = null;
+  appState.isUploadingFile = false;
   
-  if(!fileInput.files[0]){
-    showToast('Please select a file', 'error');
+  domElements.uploadDropzone.className = 'upload-dropzone';
+  domElements.uploadIconDisplay.className = 'fas fa-cloud-upload-alt upload-icon-large';
+  domElements.uploadIconDisplay.style.color = '';
+  domElements.uploadMainText.textContent = 'Click to upload or drag & drop';
+  domElements.uploadMainText.style.cssText = '';
+  domElements.uploadSubText.textContent = 'PNG, JPG, GIF, MP4 up to 20MB';
+  domElements.filePreviewArea.classList.remove('visible');
+  domElements.previewContainer.innerHTML = '';
+  domElements.uploadProgressSection.classList.remove('visible', 'success-state', 'error-state');
+  domElements.submitUploadBtn.disabled = true;
+  domElements.submitUploadBtn.classList.remove('button-loading');
+  domElements.submitUploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Create Pin';
+  domElements.cancelUploadBtn.textContent = 'Cancel';
+  domElements.cancelUploadBtn.disabled = false;
+  domElements.closeUploadModalBtn.disabled = false;
+  domElements.changeFileBtn.disabled = false;
+  domElements.pinTitleInput.disabled = false;
+}
+
+domElements.createPinBtn.addEventListener('click', openUploadModal);
+domElements.closeUploadModalBtn.addEventListener('click', closeUploadModal);
+domElements.cancelUploadBtn.addEventListener('click', closeUploadModal);
+domElements.uploadModal.addEventListener('click', (event) => {
+  if (event.target === domElements.uploadModal) closeUploadModal();
+});
+
+// FILE SELECTION HANDLING
+domElements.uploadDropzone.addEventListener('click', () => domElements.fileInputElement.click());
+domElements.changeFileBtn.addEventListener('click', () => domElements.fileInputElement.click());
+
+domElements.fileInputElement.addEventListener('change', (event) => processSelectedFile(event.target));
+
+function processSelectedFile(inputElement) {
+  const file = inputElement.files[0];
+  if (!file) return;
+  
+  // Validate file size
+  if (file.size > APP_CONFIG.MAX_FILE_SIZE_BYTES) {
+    ToastNotification.showMessage(`File size exceeds limit (${APP_CONFIG.MAX_FILE_SIZE_BYTES / 1024 / 1024}MB max)`, 'error');
+    inputElement.value = '';
     return;
   }
   
-  showLoader();
+  appState.selectedFileObject = file;
+  domElements.uploadDropzone.classList.add('has-file-selected');
+  domElements.uploadIconDisplay.className = 'fas fa-check-circle upload-icon-large';
+  domElements.uploadIconDisplay.style.color = '#00C853';
+  domElements.uploadMainText.textContent = 'File selected successfully!';
+  domElements.uploadMainText.style.fontWeight = '600';
+  domElements.uploadMainText.style.color = '#00C853';
+  domElements.uploadSubText.textContent = 'Click "Change File" to select a different file';
+  domElements.fileNameDisplay.textContent = SecurityUtils.escapeHtmlString(file.name);
+  domElements.fileSizeDisplay.textContent = UtilityHelpers.formatFileSize(file.size);
   
-  const form = new FormData();
-  form.append("file", fileInput.files[0]);
-  form.append("title", titleInput.value);
+  if (file.type.startsWith('video/')) {
+    domElements.fileTypeIcon.innerHTML = '<i class="fas fa-video"></i>';
+    const videoObjectUrl = URL.createObjectURL(file);
+    domElements.previewContainer.innerHTML = `
+      <video src="${videoObjectUrl}" class="preview-video-element" controls preload="metadata"></video>
+      <button type="button" class="delete-file-btn" title="Remove file"><i class="fas fa-times"></i></button>
+    `;
+    
+    const videoElement = document.createElement('video');
+    videoElement.preload = 'metadata';
+    videoElement.onloadedmetadata = () => {
+      domElements.fileSizeDisplay.textContent = `${UtilityHelpers.formatFileSize(file.size)} • ${UtilityHelpers.formatVideoDuration(videoElement.duration)}`;
+      URL.revokeObjectURL(videoElement.src);
+    };
+    videoElement.src = videoObjectUrl;
+  } else {
+    domElements.fileTypeIcon.innerHTML = '<i class="fas fa-image"></i>';
+    const fileReader = new FileReader();
+    fileReader.onload = (readEvent) => {
+      domElements.previewContainer.innerHTML = `
+        <img src="${readEvent.target.result}" alt="${SecurityUtils.escapeHtmlString(file.name)}" class="preview-image-element"/>
+        <button type="button" class="delete-file-btn" title="Remove file"><i class="fas fa-times"></i></button>
+      `;
+      const imgElement = new Image();
+      imgElement.onload = () => {
+        domElements.fileSizeDisplay.textContent = `${UtilityHelpers.formatFileSize(file.size)} • ${imgElement.width}×${imgElement.height}`;
+      };
+      imgElement.src = readEvent.target.result;
+    };
+    fileReader.readAsDataURL(file);
+  }
+  
+  domElements.filePreviewArea.classList.add('visible');
+  domElements.submitUploadBtn.disabled = false;
+  
+  // Attach remove button listener
+  const removeButton = domElements.previewContainer.querySelector('.delete-file-btn');
+  if (removeButton) {
+    removeButton.addEventListener('click', clearSelectedFile);
+  }
+}
 
+function clearSelectedFile() {
+  domElements.fileInputElement.value = '';
+  appState.selectedFileObject = null;
+  domElements.uploadDropzone.className = 'upload-dropzone';
+  domElements.uploadIconDisplay.className = 'fas fa-cloud-upload-alt upload-icon-large';
+  domElements.uploadIconDisplay.style.color = '';
+  domElements.uploadMainText.textContent = 'Click to upload or drag & drop';
+  domElements.uploadMainText.style.cssText = '';
+  domElements.uploadSubText.textContent = 'PNG, JPG, GIF, MP4 up to 20MB';
+  domElements.filePreviewArea.classList.remove('visible');
+  domElements.previewContainer.innerHTML = '';
+  domElements.submitUploadBtn.disabled = true;
+}
+
+// PROGRESS TRACKING SYSTEM
+function initializeProgressDisplay() {
+  domElements.uploadProgressSection.classList.remove('success-state', 'error-state');
+  domElements.uploadProgressSection.classList.add('visible');
+  domElements.progressSpinnerIcon.className = 'status-spinner-small';
+  domElements.progressSpinnerIcon.innerHTML = '';
+  domElements.progressStatusText.textContent = 'Preparing...';
+  domElements.progressPercentageValue.textContent = '0%';
+  domElements.progressBarInner.style.width = '0%';
+  domElements.progressSpeedInfo.innerHTML = '<i class="fas fa-arrow-up"></i> Initializing...';
+  domElements.progressTimeInfo.innerHTML = '<i class="fas fa-clock"></i> Please wait...';
+}
+
+function updateProgressDisplay(percentage, speed, estimatedTime) {
+  domElements.progressPercentageValue.textContent = `${Math.round(percentage)}%`;
+  domElements.progressBarInner.style.width = `${percentage}%`;
+  
+  if (percentage >= 100) {
+    domElements.progressStatusText.textContent = 'Processing...';
+  } else if (percentage >= 85) {
+    domElements.progressStatusText.textContent = 'Almost done...';
+  } else {
+    domElements.progressStatusText.textContent = 'Uploading...';
+  }
+  
+  if (speed) {
+    domElements.progressSpeedInfo.innerHTML = `<i class="fas fa-arrow-up"></i> ${speed}/s`;
+  }
+  if (estimatedTime && percentage > 0 && percentage < 100) {
+    domElements.progressTimeInfo.innerHTML = `<i class="fas fa-clock"></i> ${estimatedTime} remaining`;
+  } else if (percentage >= 100) {
+    domElements.progressTimeInfo.innerHTML = '<i class="fas fa-clock"></i> Finalizing...';
+  }
+}
+
+function showSuccessState() {
+  domElements.uploadProgressSection.classList.add('success-state');
+  domElements.progressSpinnerIcon.className = 'status-spinner-small completed';
+  domElements.progressSpinnerIcon.innerHTML = '<i class="fas fa-check"></i>';
+  domElements.progressStatusText.textContent = 'Complete!';
+  domElements.progressPercentageValue.textContent = '100%';
+  domElements.progressBarInner.style.width = '100%';
+  domElements.progressSpeedInfo.innerHTML = '<i class="fas fa-check-circle"></i> <span style="color:#00C853">Success!</span>';
+  domElements.progressTimeInfo.innerHTML = '<i class="fas fa-clock"></i> Done';
+}
+
+function showErrorState(errorMessage) {
+  domElements.uploadProgressSection.classList.add('error-state');
+  domElements.progressSpinnerIcon.style.background = '#DC2626';
+  domElements.progressSpinnerIcon.innerHTML = '<i class="fas fa-exclamation"></i>';
+  domElements.progressStatusText.textContent = errorMessage || 'Upload failed';
+  domElements.progressSpeedInfo.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <span style="color:#DC2626">Error occurred</span>';
+  domElements.progressTimeInfo.innerHTML = '<i class="fas fa-redo"></i> Try again';
+}
+
+function setUILockedState(isLocked) {
+  appState.isUploadingFile = isLocked;
+  domElements.uploadDropzone.classList.toggle('is-uploading', isLocked);
+  domElements.submitUploadBtn.disabled = isLocked;
+  domElements.submitUploadBtn.classList.toggle('button-loading', isLocked);
+  domElements.cancelUploadBtn.disabled = isLocked;
+  domElements.cancelUploadBtn.textContent = isLocked ? 'Uploading...' : 'Cancel';
+  domElements.closeUploadModalBtn.disabled = isLocked;
+  domElements.pinTitleInput.disabled = isLocked;
+  domElements.changeFileBtn.disabled = isLocked;
+  if (isLocked) initializeProgressDisplay();
+}
+
+// UPLOAD SUBMISSION HANDLER
+domElements.uploadFormElement.addEventListener('submit', async (submitEvent) => {
+  submitEvent.preventDefault();
+  
+  if (!appState.selectedFileObject) {
+    ToastNotification.showMessage('Please select a file first', 'error');
+    return;
+  }
+  
+  setUILockedState(true);
+  
+  const formData = new FormData();
+  formData.append('file', appState.selectedFileObject);
+  formData.append('title', SecurityUtils.escapeHtmlString(domElements.pinTitleInput.value.trim()));
+  
   try {
-    const response = await fetch(API + "/post/upload", {
-      method: "POST",
-      headers: {
-        "Authorization": localStorage.getItem("token")
-      },
-      body: form
+    const xhrRequest = new XMLHttpRequest();
+    
+    xhrRequest.upload.onprogress = (progressEvent) => {
+      if (progressEvent.lengthComputable) {
+        const percentageComplete = (progressEvent.loaded / progressEvent.total) * 100;
+        const elapsedTime = (Date.now() - startTime) / 1000;
+        const currentSpeed = UtilityHelpers.formatFileSize(progressEvent.loaded / Math.max(elapsedTime, 0.001));
+        updateProgressDisplay(percentageComplete, currentSpeed, '');
+      }
+    };
+    
+    const startTime = Date.now();
+    
+    await new Promise((resolvePromise, rejectPromise) => {
+      xhrRequest.onload = resolvePromise;
+      xhrRequest.onerror = rejectPromise;
+      xhrRequest.open('POST', `${APP_CONFIG.API_ENDPOINT}/post/upload`);
+      xhrRequest.setRequestHeader('Authorization', appState.authToken);
+      xhrRequest.send(formData);
     });
     
-    if(response.ok){
-      hideUpload();
-      loadPosts(true);
-      showToast('Pin created successfully! 🎉');
-    } else {
-      throw new Error('Upload failed');
-    }
-  } catch (error) {
-    console.error('Upload failed:', error);
-    showToast('Upload failed. Please try again.', 'error');
-  } finally {
-    hideLoader();
-  }
-}
-
-// ==================== LOADING STATES ====================
-function showLoader(){
-  isLoading = true;
-  document.getElementById('loader').classList.remove('hidden');
-}
-
-function hideLoader(){
-  isLoading = false;
-  document.getElementById('loader').classList.add('hidden');
-}
-
-function showSkeleton(){
-  document.getElementById('skeletonLoader').classList.remove('hidden');
-}
-
-function hideSkeleton(){
-  document.getElementById('skeletonLoader').classList.add('hidden');
-}
-
-// ==================== TOAST NOTIFICATION ====================
-function showToast(message, type = 'success'){
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.style.background = type === 'error' ? '#dc2626' : '#111111';
-  toast.classList.add('show');
-  
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3200);
-}
-
-// ==================== LOAD POSTS / PINS ====================
-let page = 1;
-
-async function loadPosts(reset = false){
-  if(isLoading) return;
-  
-  if(reset){
-    grid.innerHTML = "";
-    page = 1;
-    showSkeleton();
-  } else {
-    showLoader();
-  }
-
-  try {
-    const response = await fetch(API + "/post/all?page=" + page);
-    const data = await response.json();
+    updateProgressDisplay(99, null, null);
+    await new Promise(resolveDelay => setTimeout(resolveDelay, 800));
+    showSuccessState();
     
-    hideSkeleton();
-    hideLoader();
+    setTimeout(() => {
+      closeUploadModal();
+      fetchPinsData(true);
+      ToastNotification.showMessage('Pin created successfully! 🎉');
+    }, 1200);
+    
+  } catch (error) {
+    console.error('Upload error:', error);
+    showErrorState(error.message || 'Network error occurred');
+    setUILockedState(false);
+    ToastNotification.showMessage('Upload failed. Please try again.', 'error');
+  }
+});
 
-    data.forEach((pin, index) => {
-      setTimeout(() => {
-        const card = document.createElement('div');
-        card.className = 'pin-card';
-        
-        // Random heights for variety (like real Pinterest)
-        const heights = ['240px', '290px', '340px', '390px', '310px', '370px', '260px'];
-        const randomHeight = heights[Math.floor(Math.random() * heights.length)];
-        
-        let mediaContent = '';
-        if(pin.type === "image"){
-          mediaContent = `<img src="${pin.fileUrl}" alt="${pin.title || 'Pin'}" class="pin-image" style="height: ${randomHeight};"/>`;
-        } else {
-          mediaContent = `
-            <video src="${pin.fileUrl}" controls class="pin-image" style="height: ${randomHeight}; object-fit: cover;"></video>
-          `;
-        }
-
-        // Random usernames for realistic look
-        const usernames = ['Sarah M.', 'John D.', 'Emma W.', 'Mike R.', 'Lisa K.', 'Alex P.', 'Chris T.', 'Nina B.', 'David L.', 'Sophie R.'];
-        const randomUsername = usernames[Math.floor(Math.random() * usernames.length)];
-
-        card.innerHTML = `
-          <div class="pin-image-wrapper">
-            ${mediaContent}
-            <div class="pin-overlay">
-              <div class="pin-actions">
-                <button class="save-btn" onclick="savePin(this)">Save</button>
-                <button class="action-icon-btn" title="Share">
-                  <i class="fas fa-share-alt"></i>
-                </button>
-                <button class="action-icon-btn" title="More">
-                  <i class="fas fa-ellipsis-h"></i>
-                </button>
-              </div>
+// ==================== PREVIEW MODAL MANAGEMENT ====================
+function openPreviewModal(mediaUrl, mediaType, mediaTitle) {
+  appState.currentPreviewData = { url: mediaUrl, type: mediaType, title: mediaTitle };
+  
+  if (mediaType === 'video') {
+    domElements.previewMediaContainer.innerHTML = `
+      <div class="fullsize-video-wrapper">
+        <video id="fullscreenVideoPlayer" src="${mediaUrl}" muted playsinline></video>
+        <div class="fullscreen-video-controls">
+          <div class="progress-bar-container" id="videoProgressBarTrack">
+            <div class="progress-bar-fill" id="videoProgressBarFill"></div>
+          </div>
+          <div class="video-control-buttons">
+            <div class="control-group-left">
+              <button class="video-control-btn" id="playPauseVideoBtn"><i class="fas fa-play"></i></button>
+              <button class="video-control-btn" id="muteUnmuteVideoBtn"><i class="fas fa-volume-mute"></i></button>
+              <input type="range" class="volume-slider" id="volumeControlSlider" value="0" min="0" max="1" step="0.1"/>
+              <span class="time-display" id="videoTimeDisplay">0:00 / 0:00</span>
+            </div>
+            <div class="control-group-right">
+              <button class="video-control-btn" id="fullscreenToggleBtn"><i class="fas fa-expand"></i></button>
             </div>
           </div>
-          ${pin.title ? `
-            <div class="pin-info">
-              <h3 class="pin-title">${pin.title}</h3>
-              <div class="pin-user">
-                <div class="user-small-avatar">${randomUsername.charAt(0)}</div>
-                <span class="username">${randomUsername}</span>
+        </div>
+      </div>`;
+    initializeFullscreenVideoPlayer();
+  } else {
+    domElements.previewMediaContainer.innerHTML = `
+      <img src="${mediaUrl}" alt="${SecurityUtils.escapeHtmlString(mediaTitle)}" class="fullsize-preview-image" 
+           onerror="this.parentElement.innerHTML='<div class=\'broken-placeholder\'><i class=\'fas fa-unlink\'></i><p>Image unavailable</p><small>This file may have been removed</small></div>'"/>`;
+  }
+  
+  domElements.previewModal.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreviewModal() {
+  domElements.previewModal.classList.remove('visible');
+  document.body.style.overflow = '';
+  const videoPlayer = document.getElementById('fullscreenVideoPlayer');
+  if (videoPlayer) videoPlayer.pause();
+  appState.currentPreviewData = null;
+}
+
+function initializeFullscreenVideoPlayer() {
+  const videoEl = document.getElementById('fullscreenVideoPlayer');
+  const playPauseBtn = document.getElementById('playPauseVideoBtn');
+  const progressBarFill = document.getElementById('videoProgressBarFill');
+  const progressBarTrack = document.getElementById('videoProgressBarTrack');
+  const timeDisplay = document.getElementById('videoTimeDisplay');
+  const muteBtn = document.getElementById('muteUnmuteVideoBtn');
+  const volumeSlider = document.getElementById('volumeControlSlider');
+  const fullscreenBtn = document.getElementById('fullscreenToggleBtn');
+  
+  if (!videoEl) return;
+  
+  let isPlaying = false;
+  
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      videoEl.pause();
+      playPauseBtn.innerHTML = '<i class="fas fa-play">';
+    } else {
+      videoEl.play();
+      playPauseBtn.innerHTML = '<i class="fas fa-pause">';
+    }
+    isPlaying = !isPlaying;
+  };
+  
+  videoEl.addEventListener('timeupdate', () => {
+    if (videoEl.duration) {
+      progressBarFill.style.width = `${(videoEl.currentTime / videoEl.duration) * 100}%`;
+      timeDisplay.textContent = `${UtilityHelpers.formatVideoDuration(videoEl.currentTime)} / ${UtilityHelpers.formatVideoDuration(videoEl.duration)}`;
+    }
+  });
+  
+  videoEl.addEventListener('ended', () => {
+    isPlaying = false;
+    playPauseBtn.innerHTML = '<i class="fas fa-play">';
+  });
+  
+  playPauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePlayPause();
+  });
+  
+  videoEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePlayPause();
+  });
+  
+  progressBarTrack.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (videoEl.duration) {
+      videoEl.currentTime = (e.offsetX / progressBarTrack.offsetWidth) * videoEl.duration;
+    }
+  });
+  
+  muteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    videoEl.muted = !videoEl.muted;
+    muteBtn.innerHTML = videoEl.muted ? '<i class="fas fa-volume-mute">' : '<i class="fas fa-volume-up">';
+    volumeSlider.value = videoEl.muted ? 0 : videoEl.volume;
+  });
+  
+  volumeSlider.addEventListener('input', (e) => {
+    videoEl.volume = parseFloat(e.target.value);
+    videoEl.muted = e.target.value == 0;
+    muteBtn.innerHTML = e.target.value == 0 ? '<i class="fas fa-volume-mute">' : '<i class="fas fa-volume-up">';
+  });
+  
+  fullscreenBtn.addEventListener('click', () => {
+    const wrapper = document.querySelector('.fullsize-video-wrapper');
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      wrapper.requestFullscreen();
+    }
+  });
+  
+  // Handle video load errors
+  videoEl.addEventListener('error', () => {
+    domElements.previewMediaContainer.innerHTML = `
+      <div class="broken-placeholder" style="min-height:300px;display:flex;flex-direction:column;align-items:center;">
+        <i class="fas fa-unlink" style="font-size:3rem;margin-bottom:1rem;opacity:0.4;color:#DC2626"></i>
+        <p style="font-size:1.125rem;font-weight:600;color:#DC2626">Video unavailable</p>
+        <small style="color:#767676">This file may have been removed from server</small>
+      </div>`;
+  });
+}
+
+domElements.closePreviewBtn.addEventListener('click', closePreviewModal);
+domElements.previewModal.addEventListener('click', (event) => {
+  if (event.target === domElements.previewModal) closePreviewModal();
+});
+
+domElements.downloadPreviewBtn.addEventListener('click', () => {
+  if (!appState.currentPreviewData?.url) return;
+  
+  const downloadLink = document.createElement('a');
+  downloadLink.href = appState.currentPreviewData.url;
+  downloadLink.download = appState.currentPreviewData.url.split('/').pop() || 'download';
+  downloadLink.target = '_blank';
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  ToastNotification.showMessage('Download started...');
+});
+
+domElements.savePreviewBtn.addEventListener('click', () => {
+  ToastNotification.showMessage('Saved to your board!');
+});
+
+// ==================== VIDEO PLAYER FOR PIN CARDS ====================
+function setupCardVideoPlayer(cardElementId) {
+  const cardElement = document.getElementById(cardElementId);
+  if (!cardElement) return;
+  
+  const videoElement = cardElement.querySelector('video');
+  const overlayButton = cardElement.querySelector('.play-button-overlay');
+  const playIcon = cardElement.querySelector('.play-icon');
+  const progressBarFill = cardElement.querySelector('.progress-bar-fill');
+  const progressBarTrack = cardElement.querySelector('.progress-bar-container');
+  const volumeSlider = cardElement.querySelector('.volume-slider');
+  const volumeIcon = cardElement.querySelector('.volume-icon');
+  const timeDisplayElement = cardElement.querySelector('.time-display');
+  
+  if (!videoElement) return;
+  
+  let isVideoPlaying = false;
+  
+  const toggleVideoPlayback = (event) => {
+    event?.stopPropagation();
+    if (isVideoPlaying) {
+      videoElement.pause();
+      if (playIcon) playIcon.className = 'fas fa-play play-icon';
+      if (overlayButton) overlayButton.style.display = 'flex';
+    } else {
+      videoElement.play();
+      if (playIcon) playIcon.className = 'fas fa-pause play-icon';
+      if (overlayButton) overlayButton.style.display = 'none';
+    }
+    isVideoPlaying = !isVideoPlaying;
+  };
+  
+  if (overlayButton) overlayButton.addEventListener('click', toggleVideoPlayback);
+  videoElement.addEventListener('click', toggleVideoPlayback);
+  
+  videoElement.addEventListener('timeupdate', () => {
+    if (videoElement.duration && progressBarFill) {
+      progressBarFill.style.width = `${(videoElement.currentTime / videoElement.duration) * 100}%`;
+    }
+    if (timeDisplayElement && videoElement.duration) {
+      timeDisplayElement.textContent = `${UtilityHelpers.formatVideoDuration(videoElement.currentTime)} / ${UtilityHelpers.formatVideoDuration(videoElement.duration)}`;
+    }
+  });
+  
+  videoElement.addEventListener('ended', () => {
+    isVideoPlaying = false;
+    if (playIcon) playIcon.className = 'fas fa-play play-icon';
+    if (overlayButton) overlayButton.style.display = 'flex';
+  });
+  
+  if (progressBarTrack) {
+    progressBarTrack.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (videoElement.duration) {
+        videoElement.currentTime = (event.offsetX / progressBarTrack.offsetWidth) * videoElement.duration;
+      }
+    });
+  }
+  
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', (event) => {
+      event.stopPropagation();
+      videoElement.volume = parseFloat(event.target.value);
+      videoElement.muted = event.target.value == 0;
+      if (volumeIcon) {
+        volumeIcon.className = (parseFloat(event.target.value) == 0 ? 'fas fa-volume-mute' : 'fas fa-volume-up') + ' volume-icon';
+      }
+    });
+  }
+  
+  if (volumeIcon) {
+    volumeIcon.addEventListener('click', (event) => {
+      event.stopPropagation();
+      videoElement.muted = !videoElement.muted;
+      volumeIcon.className = (videoElement.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up') + ' volume-icon';
+      if (volumeSlider) volumeSlider.value = videoElement.muted ? 0 : videoElement.volume;
+    });
+  }
+  
+  // Handle video errors - mark as broken
+  videoElement.addEventListener('error', () => {
+    markCardAsBroken(cardElement, videoElement.src || '');
+  });
+}
+
+// ==================== BROKEN FILE DETECTION & HANDLING ====================
+function markCardAsBroken(cardElement, failedUrl) {
+  if (!cardElement) return;
+  
+  cardElement.classList.add('broken-state');
+  
+  const pinIdentifier = SecurityUtils.extractPinIdFromUrl(failedUrl);
+  if (pinIdentifier) {
+    appState.brokenPinsSet.add(pinIdentifier);
+    persistBrokenPins();
+  }
+  
+  const mediaWrapper = cardElement.querySelector('.pin-media-wrapper');
+  if (mediaWrapper) {
+    mediaWrapper.innerHTML = `
+      <div class="broken-placeholder">
+        <i class="fas fa-unlink"></i>
+        <p>File Not Found</p>
+        <small>This file may have been deleted or moved</small>
+      </div>
+      <button class="remove-broken-action" onclick="removeBrokenPinCard(this)" title="Remove this pin">
+        <i class="fas fa-times"></i>
+      </button>`;
+  }
+  
+  console.warn(`⚠️ Broken file detected:`, failedUrl);
+}
+
+window.removeBrokenPinCard = function(buttonElement) {
+  const cardToRemove = buttonElement.closest('.pin-card');
+  if (cardToRemove) {
+    cardToRemove.style.transition = 'all 0.3s ease';
+    cardToRemove.style.opacity = '0';
+    cardToRemove.style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+      cardToRemove.remove();
+      ToastNotification.showMessage('Broken pin removed');
+    }, 300);
+  }
+};
+
+function checkIfKnownBroken(urlToCheck) {
+  const pinId = SecurityUtils.extractPinIdFromUrl(urlToCheck);
+  return pinId ? appState.brokenPinsSet.has(pinId) : false;
+}
+
+function clearBrokenPinsCache() {
+  appState.brokenPinsSet.clear();
+  localStorage.removeItem(APP_CONFIG.BROKEN_PINS_STORAGE_KEY);
+  ToastNotification.showMessage('Broken files cache cleared');
+}
+
+window.clearBrokenPinsCache = clearBrokenPinsCache;
+
+// ==================== DATA FETCHING WITH INFINITE SCROLL FIX ====================
+async function fetchPinsData(resetList = false) {
+  // Prevent multiple simultaneous requests
+  if (appState.isLoadingData) return;
+  
+  // Prevent loading when no more pages available
+  if (!resetList && !appState.hasMorePages) {
+    showEndOfContentMessage();
+    return;
+  }
+  
+  if (resetList) {
+    domElements.pinsGrid.innerHTML = '';
+    appState.currentPage = 1;
+    appState.hasMorePages = true;
+    domElements.skeletonLoader.style.display = 'block';
+    domElements.loadingIndicator.style.display = 'none';
+    hideEndOfContentMessage();
+  } else {
+    domElements.loadingIndicator.style.display = 'flex';
+  }
+  
+  appState.isLoadingData = true;
+  
+  try {
+    const response = await fetch(`${APP_CONFIG.API_ENDPOINT}/post/all?page=${appState.currentPage}`, {
+      headers: { 'Authorization': appState.authToken }
+    });
+    
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    
+    const pinsArray = await response.json();
+    
+    // Check if we've reached the end
+    if (!pinsArray || pinsArray.length === 0) {
+      appState.hasMorePages = false;
+      if (resetList) {
+        showEmptyStateMessage();
+      } else {
+        showEndOfContentMessage();
+      }
+      domElements.skeletonLoader.style.display = 'none';
+      domElements.loadingIndicator.style.display = 'none';
+      appState.isLoadingData = false;
+      return;
+    }
+    
+    // Filter out invalid and known-broken pins
+    const validPinsArray = pinsArray.filter(pinItem => {
+      const itemUrl = pinItem.fileUrl;
+      
+      // Skip invalid URLs
+      if (!itemUrl || !SecurityUtils.isValidUrlFormat(itemUrl)) {
+        console.warn('Skipping invalid URL:', itemUrl);
+        return false;
+      }
+      
+      // Skip known broken pins
+      if (checkIfKnownBroken(itemUrl)) {
+        console.warn('Skipping known broken pin:', itemUrl);
+        return false;
+      }
+      
+      return true;
+    });
+    
+    domElements.skeletonLoader.style.display = 'none';
+    domElements.loadingIndicator.style.display = 'none';
+    
+    // Create document fragment for batch DOM insertion
+    const fragment = document.createDocumentFragment();
+    
+    validPinsArray.forEach((pinData, index) => {
+      const uniqueCardId = `pin-${Date.now()}-${index}`;
+      const randomHeight = UtilityHelpers.generateRandomHeight();
+      const sanitizedUrl = SecurityUtils.sanitizeUrl(pinData.fileUrl);
+      const sanitizedTitle = SecurityUtils.escapeHtmlString(pinData.title || '');
+      
+      const cardElement = document.createElement('div');
+      cardElement.className = 'pin-card';
+      cardElement.id = uniqueCardId;
+      
+      let mediaContentHTML = '';
+      
+      if (pinData.type === 'image' && sanitizedUrl) {
+        mediaContentHTML = `<img src="${sanitizedUrl}" alt="${sanitizedTitle}" class="pin-image" style="height:${randomHeight}" loading="lazy" onerror="markCardAsBroken(this.closest('.pin-card'), '${sanitizedUrl}')"/>`;
+      } else if (sanitizedUrl) {
+        mediaContentHTML = `
+          <div class="video-container" style="height:${randomHeight}">
+            <video src="${sanitizedUrl}" preload="metadata" muted></video>
+            <div class="play-button-overlay"><i class="fas fa-play"></i></div>
+            <div class="video-overlay-controls">
+              <div class="progress-bar-container"><div class="progress-bar-fill"></div></div>
+              <div class="video-control-buttons">
+                <div class="control-group-left">
+                  <button class="video-control-btn"><i class="fas fa-play play-icon"></i></button>
+                  <button class="video-control-btn"><i class="fas fa-volume-mute volume-icon"></i></button>
+                  <input type="range" class="volume-slider" value="0" min="0" max="1" step="0.1"/>
+                  <span class="time-display">0:00 / 0:00</span>
+                </div>
+                <div class="control-group-right">
+                  <button class="video-control-btn"><i class="fas fa-expand"></i></button>
+                </div>
               </div>
             </div>
-          ` : ''}
-        `;
-        
-        grid.appendChild(card);
-      }, index * 45);
+          </div>`;
+      }
+      
+      cardElement.innerHTML = `
+        <div class="pin-media-wrapper" onclick="if(!this.closest('.pin-card').classList.contains('broken-state')){openPreviewModal('${sanitizedUrl}','${pinData.type}','${sanitizedTitle.replace(/'/g, "\\'")}')"}">
+          ${mediaContentHTML}
+        </div>
+        ${sanitizedTitle ? `<div class="pin-info-section"><p class="pin-title-text">${sanitizedTitle}</p></div>` : ''}`;
+      
+      fragment.appendChild(cardElement);
+      
+      // Initialize video player for non-image cards
+      if (pinData.type !== 'image' && sanitizedUrl) {
+        requestAnimationFrame(() => setupCardVideoPlayer(uniqueCardId));
+      }
     });
-
-    page++;
+    
+    // Batch insert into DOM
+    domElements.pinsGrid.appendChild(fragment);
+    appState.currentPage++;
+    
+    // Log filtering statistics
+    if (pinsArray.length !== validPinsArray.length) {
+      console.log(`📊 Filtered ${pinsArray.length - validPinsArray.length} invalid/broken pins from ${pinsArray.length} total`);
+    }
+    
+    // Check if we should expect more pages based on returned data size
+    if (validPinsArray.length < 10) {
+      appState.hasMorePages = false;
+    }
+    
   } catch (error) {
-    console.error('Failed to load posts:', error);
-    hideSkeleton();
-    hideLoader();
-    showToast('Failed to load pins', 'error');
+    console.error('Error fetching pins:', error);
+    domElements.skeletonLoader.style.display = 'none';
+    domElements.loadingIndicator.style.display = 'none';
+    ToastNotification.showMessage('Failed to load pins. Please refresh the page.', 'error');
+  } finally {
+    appState.isLoadingData = false;
   }
 }
 
-// ==================== SAVE PIN ACTION ====================
-function savePin(button){
-  const originalText = button.textContent;
-  button.textContent = 'Saved ✓';
-  button.style.backgroundColor = '#111111';
-  
-  setTimeout(() => {
-    button.textContent = originalText;
-    button.style.backgroundColor = '';
-  }, 1600);
-  
-  showToast('Pin saved to your board! 💾');
+function showEndOfContentMessage() {
+  domElements.endOfContentMessage.style.display = 'block';
+  domElements.loadingIndicator.style.display = 'none';
 }
 
-// ==================== INFINITE SCROLL ====================
-let scrollTimeout;
-window.addEventListener('scroll', () => {
-  if(scrollTimeout) clearTimeout(scrollTimeout);
+function hideEndOfContentMessage() {
+  domElements.endOfContentMessage.style.display = 'none';
+}
+
+function showEmptyStateMessage() {
+  domElements.pinsGrid.innerHTML = `
+    <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: #767676;">
+      <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; display: block;"></i>
+      <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #111;">No pins yet</h3>
+      <p style="font-size: 0.9375rem;">Create your first pin to get started!</p>
+    </div>`;
+}
+
+// ==================== FIXED INFINITE SCROLL WITH THROTTLING ====================
+const handleScrollEvent = UtilityHelpers.throttleFunction(() => {
+  // Don't trigger if already loading or no more pages
+  if (appState.isLoadingData || !appState.hasMorePages) return;
   
-  scrollTimeout = setTimeout(() => {
-    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 350 && !isLoading){
-      loadPosts();
+  // Disable scroll listener during modal interactions
+  if (!appState.isScrollListenerActive) return;
+  
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+  
+  // Only trigger when near bottom with sufficient threshold
+  if (distanceFromBottom <= APP_CONFIG.SCROLL_THRESHOLD) {
+    // Additional safety check: ensure we're actually scrolling down
+    if (scrollTop > appState.lastScrollPosition) {
+      fetchPinsData(false);
     }
-  }, 120);
-});
+  }
+  
+  appState.lastScrollPosition = scrollTop;
+}, 250); // Throttle to maximum once per 250ms
+
+// Use passive event listener for better performance
+window.addEventListener('scroll', handleScrollEvent, { passive: true });
+
+// Disable scroll loading when modals are open
+function disableScrollLoading() {
+  appState.isScrollListenerActive = false;
+}
+
+function enableScrollLoading() {
+  appState.isScrollListenerActive = true;
+}
+
+// Update modal handlers to disable scroll loading
+const originalOpenUploadModal = openUploadModal;
+openUploadModal = function() {
+  disableScrollLoading();
+  originalOpenUploadModal();
+};
+
+const originalCloseUploadModal = closeUploadModal;
+closeUploadModal = function() {
+  originalCloseUploadModal();
+  enableScrollLoading();
+};
+
+const originalOpenPreviewModal = openPreviewModal;
+openPreviewModal = function(url, type, title) {
+  disableScrollLoading();
+  originalOpenPreviewModal(url, type, title);
+};
+
+const originalClosePreviewModal = closePreviewModal;
+closePreviewModal = function() {
+  originalClosePreviewModal();
+  enableScrollLoading();
+};
 
 // ==================== KEYBOARD SHORTCUTS ====================
-document.addEventListener('keydown', (e) => {
-  // ESC to close modal
-  if(e.key === 'Escape'){
-    hideUpload();
+document.addEventListener('keydown', (keyboardEvent) => {
+  // ESC to close modals
+  if (keyboardEvent.key === 'Escape' && !appState.isUploadingFile) {
+    closeUploadModal();
+    closePreviewModal();
   }
   
-  // Focus search
-  if((e.ctrlKey && e.key === 'k') || e.key === '/'){
-    // Don't trigger if typing in input
-    if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){
-      e.preventDefault();
-      document.querySelector('.search-input').focus();
-    }
+  // Ctrl+K or / to focus search
+  if ((keyboardEvent.ctrlKey && keyboardEvent.key === 'k') || 
+      (keyboardEvent.key === '/' && !['INPUT', 'TEXTAREA'].includes(keyboardEvent.target.tagName))) {
+    keyboardEvent.preventDefault();
+    document.querySelector('.search-input').focus();
   }
 });
 
-// ==================== INITIALIZE ====================
-loadPosts();
+// ==================== APPLICATION INITIALIZATION ====================
+console.log('%c📌 Pinterest Feed v4.0 - Professional Edition', 'color:#E60023;font-size:18px;font-weight:bold;');
+console.log('%c✅ Features: Fixed Infinite Scroll | Enhanced UI/UX | Broken File Detection', 'color:#666;font-size:13px;');
+console.log('%c💡 Debug: Type clearBrokenPinsCache() in console to reset broken file tracking', 'color:#999;font-size:11px;');
 
-console.log('%c📌 Pinterest Feed Loaded!', 'color: #E60023; font-size: 18px; font-weight: bold;');
+// Initial data load
+fetchPinsData(true);
+
 </script>
-
 </body>
 </html>
